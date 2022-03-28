@@ -4,9 +4,14 @@ socket.addEventListener("open", () => {
 });
 
 socket.addEventListener("message", (message) => {
-  console.log(message);
+  const { data } = message;
+  console.log(data);
 });
 
 socket.addEventListener("close", () => {
-  console.log("Closed connection");
+  console.log("Disconnected from connection");
 });
+
+setInterval(() => {
+  socket.send("Hi");
+}, 1000);
