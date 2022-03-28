@@ -1,6 +1,6 @@
 import http from "http";
 import express from "express";
-import WebSocket from "ws";
+import ws from "ws";
 const app = express();
 
 app.set("view engine", "pug");
@@ -11,7 +11,12 @@ app.get("/", (req, res) => res.render("home"));
 app.get("*", (req, res) => res.redirect("/"));
 
 const server = http.createServer(app);
-const wss = new WebSocket.Server({ server });
+const wss = new ws.Server({ server });
+
+wss.on("connection", (socket) => {
+  console.log(socket);
+  console.log("connected");
+});
 
 server.listen(3000, () => {
   console.log("Listening on 3000");
