@@ -14,8 +14,8 @@ const server = http.createServer(app);
 const wss = new ws.Server({ server });
 
 wss.on("connection", (socket) => {
-  console.log(socket);
-  console.log("connected");
+  console.log("Connected to Browser");
+  socket.send("hello world");
 });
 
 server.listen(3000, () => {
