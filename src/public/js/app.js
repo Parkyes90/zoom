@@ -8,7 +8,9 @@ socket.addEventListener("open", () => {
 
 socket.addEventListener("message", (message) => {
   const { data } = message;
-  console.log(data);
+  const li = document.createElement("li");
+  li.innerText = data;
+  messageList.append(li);
 });
 
 socket.addEventListener("close", () => {
@@ -20,4 +22,4 @@ messageForm.addEventListener("submit", (event) => {
   const input = messageForm.querySelector("input");
   socket.send(input.value);
   messageForm.reset();
-})
+});

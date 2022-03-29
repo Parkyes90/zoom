@@ -13,16 +13,18 @@ app.get("*", (req, res) => res.redirect("/"));
 const server = http.createServer(app);
 const wss = new ws.Server({ server });
 
+const sockets = [];
+
 wss.on("connection", (socket) => {
+  sockets.push(socket);
   console.log("Connected to Browser");
   socket.on("close", () => {
     console.log("Disconnected from Browser");
   });
   socket.on("message", (rawData, isBinary) => {
     const message = isBinary ? rawData : rawData.toString();
-    socket.send(message);
+    sockets.forEach((aSocket) => aSocket.send(message));
   });
-  socket.send("hello world");
 });
 
 server.listen(3000, () => {
