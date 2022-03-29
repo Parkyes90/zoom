@@ -18,8 +18,9 @@ wss.on("connection", (socket) => {
   socket.on("close", () => {
     console.log("Disconnected from Browser");
   });
-  socket.on("message", (message) => {
-    console.log(message);
+  socket.on("message", (rawData, isBinary) => {
+    const message = isBinary ? rawData : rawData.toString();
+    socket.send(message);
   });
   socket.send("hello world");
 });
