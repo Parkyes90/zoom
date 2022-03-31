@@ -24,3 +24,10 @@ const handleRoomSubmit = (event) => {
 };
 
 form.addEventListener("submit", handleRoomSubmit);
+
+socket.on("welcome", (message) => {
+  const ul = room.querySelector("ul");
+  const li = document.createElement("li");
+  li.innerText = "Someone Joined";
+  ul.append(li);
+});

@@ -20,6 +20,7 @@ io.on("connection", (socket) => {
   socket.on("enterRoom", (message, done) => {
     socket.join(message.payload);
     done();
+    socket.to(message.payload).emit("welcome");
   });
 });
 
