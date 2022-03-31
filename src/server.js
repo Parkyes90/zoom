@@ -14,8 +14,12 @@ const server = http.createServer(app);
 const io = new Server(server);
 
 io.on("connection", (socket) => {
-  socket.on("enterRoom", (message) => {
-    console.log(message);
+  socket.onAny((event) => {
+    console.log(event);
+  });
+  socket.on("enterRoom", (message, done) => {
+    socket.join(message.payload);
+    done();
   });
 });
 
