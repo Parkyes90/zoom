@@ -28,6 +28,10 @@ const publicRooms = () => {
   return result;
 };
 
+const countRoom = (roomName) => {
+  return io.sockets.adapter.rooms.get(roomName)?.size;
+};
+
 io.on("connection", (socket) => {
   socket["nickname"] = "anonymous";
   socket.onAny((event) => {
@@ -36,12 +40,14 @@ io.on("connection", (socket) => {
   socket.on("enterRoom", (message, done) => {
     socket.join(message.payload);
     done();
-    socket.to(message.payload).emit("welcome", socket.nickname);
+    socket
+      .to(message.payload)
+      .emit("welcome", socket.nickname, countRoom(message.payload));
     io.sockets.emit("room_change", publicRooms());
   });
   socket.on("disconnecting", () => {
     socket.rooms.forEach((room) =>
-      socket.to(room).emit("bye", socket.nickname)
+      socket.to(room).emit("bye", socket.nickname, countRoom(room) - 1)
     );
   });
   socket.on("disconnect", () => {
