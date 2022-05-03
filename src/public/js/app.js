@@ -8,6 +8,7 @@ let myStream;
 let muted = false;
 let cameraOff = false;
 let roomName;
+let myDataChannel;
 async function getMedia(deviceId) {
   const initialConstrains = {
     audio: true,
@@ -106,6 +107,9 @@ welcomeForm.addEventListener("submit", async (e) => {
 });
 
 socket.on("welcome", async () => {
+  myDataChannel = myPeerConnection.createDataChannel("chat");
+  myDataChannel.addEventListener("message", console.log);
+  console.log("create data channel");
   const offer = await myPeerConnection.createOffer();
   await myPeerConnection.setLocalDescription(offer);
   console.log("send offer");
@@ -153,6 +157,10 @@ socket.on("offer", (offer) => {
 });
 
 socket.on("offer", async (offer) => {
+  myPeerConnection.addEventListener("datachannel", (event) => {
+    myDataChannel = event.channel;
+    myDataChannel.addEventListener("message", console.log);
+  });
   console.log("receive the offer");
   await myPeerConnection.setRemoteDescription(offer);
   const answer = await myPeerConnection.createAnswer();
