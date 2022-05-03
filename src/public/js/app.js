@@ -89,10 +89,11 @@ const startMedia = async () => {
   makeConnection();
 };
 
-welcomeForm.addEventListener("submit", (e) => {
+welcomeForm.addEventListener("submit", async (e) => {
   e.preventDefault();
   const input = welcomeForm.querySelector("input");
-  socket.emit("join_room", input.value, startMedia);
+  await startMedia();
+  socket.emit("join_room", input.value);
   roomName = input.value;
   input.value = "";
 });
@@ -113,4 +114,15 @@ const makeConnection = () => {
 
 socket.on("offer", (offer) => {
   console.log(offer);
+});
+
+socket.on("offer", async (offer) => {
+  await myPeerConnection.setRemoteDescription(offer);
+  const answer = await myPeerConnection.createAnswer();
+  await myPeerConnection.setLocalDescription(answer);
+  socket.emit("answer", answer, roomName);
+});
+
+socket.on("answer", async (answer) => {
+  await myPeerConnection.setRemoteDescription(answer);
 });
