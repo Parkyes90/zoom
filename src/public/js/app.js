@@ -72,6 +72,13 @@ cameraBtn.addEventListener("click", () => {
 
 camerasSelect.addEventListener("input", async () => {
   await getMedia(camerasSelect.value);
+  if (myPeerConnection) {
+    const videoTrack = myStream.getVideoTracks()[0];
+    const videoSender = myPeerConnection
+      .getSenders()
+      .find((sender) => sender.track.kind === "video");
+    await videoSender.replaceTrack(videoTrack);
+  }
 });
 
 // welcome, call
