@@ -15,9 +15,8 @@ const server = http.createServer(app);
 const io = new Server(server);
 
 io.on("connection", (socket) => {
-  socket.on("join_room", (roomName, done) => {
+  socket.on("join_room", (roomName) => {
     socket.join(roomName);
-    done();
     socket.to(roomName).emit("welcome");
   });
   socket.on("offer", (offer, roomName) => {
